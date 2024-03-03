@@ -5,6 +5,7 @@ use App\Http\Controllers\WebsiteController;
 
 Route::get('/', [WebsiteController::class, 'index'])->name('home');
 Route::get('/dashboard', [WebsiteController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+Route::get('/settings', [WebsiteController::class, 'settings'])->name('settings')->middleware('auth');
 
 Route::get('/logout', [WebsiteController::class, 'logout'])->name('logout');
 
