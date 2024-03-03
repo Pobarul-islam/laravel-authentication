@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Mail\Websitemail;
-use Hash;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class WebsiteController extends Controller
 {
@@ -25,6 +26,29 @@ class WebsiteController extends Controller
         return view('login');
     }
 
+    public function login_submit(Request $request)
+    {
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password,
+            'status'=> 'Active',
+
+        ];
+       if(Auth::attempt($credentials)){
+            return redirect()->route('dashboard');
+        }else{
+            return redirect()->route('login');
+        }
+    }
+
+
+
+    public function logout()
+    {
+        Auth::guard()->logout();
+
+        return redirect()->route('login');
+    }
     public function registration()
     {
         return view('registration');
@@ -47,19 +71,30 @@ class WebsiteController extends Controller
         $subject = 'Registration Confirmation';
         $message = 'Please click on this link: <br><a href="'.$verification_link.'">Click here</a>';
 
-        \Mail::to($request->email)->send(new Websitemail($subject,$message));
+        Mail::to($request->email)->send(new Websitemail($subject,$message));
 
         echo 'Email is sent';
 
     }
 
-    public function registration_verify()
+    public function registration_verify($token, $email)
     {
+        $user = User::where('token', $token)->where('email', $email)->first();
+        if (!$user) {
+            return redirect()->route('login');
+        }
 
+        $user->status = 'Active';
+        $user->token = '';
+        $user->update();
+        echo 'Registration verified successfully !';
     }
+
 
     public function forget_password()
     {
         return view('forget_password');
     }
+
+
 }
