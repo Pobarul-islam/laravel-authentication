@@ -31,12 +31,12 @@ class WebsiteController extends Controller
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
-            'status'=> 'Active',
+            'status' => 'Active',
 
         ];
-       if(Auth::attempt($credentials)){
+        if (Auth::attempt($credentials)) {
             return redirect()->route('dashboard');
-        }else{
+        } else {
             return redirect()->route('login');
         }
     }
@@ -57,8 +57,8 @@ class WebsiteController extends Controller
     public function registration_submit(Request $request)
     {
 
-        $token = hash('sha256',time());
-        
+        $token = hash('sha256', time());
+
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
@@ -67,14 +67,13 @@ class WebsiteController extends Controller
         $user->token = $token;
         $user->save();
 
-        $verification_link = url('registration/verify/'.$token.'/'.$request->email);
+        $verification_link = url('registration/verify/' . $token . '/' . $request->email);
         $subject = 'Registration Confirmation';
-        $message = 'Please click on this link: <br><a href="'.$verification_link.'">Click here</a>';
+        $message = 'Please click on this link: <br><a href="' . $verification_link . '">Click here</a>';
 
-        Mail::to($request->email)->send(new Websitemail($subject,$message));
+        Mail::to($request->email)->send(new Websitemail($subject, $message));
 
         echo 'Email is sent';
-
     }
 
     public function registration_verify($token, $email)
@@ -96,5 +95,28 @@ class WebsiteController extends Controller
         return view('forget_password');
     }
 
+    public function forget_password_submit(Request $request)
+    {
+        $token = hash('sha256', time());
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
+            dd('Email not found');
+        }
+        $user->token = $token;
+        $user->update();
+        $reset_link = url('reset_password' . $token . '/' . $request->email);
+        $subject = 'Reset Password';
+        $message = 'Please Click on the link: <a href="' . $reset_link . '">Click here</a>';
+        echo 'Check you email';
 
+        Mail::to($request->email)->send(new Websitemail($subject, $message));
+
+        /*   $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->status = 'Pending';
+        $user->token = $token;
+        $user->save(); */
+    }
 }
