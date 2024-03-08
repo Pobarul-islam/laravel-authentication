@@ -8,7 +8,7 @@ Route::get('/', [WebsiteController::class, 'index'])->name('home');
 
 
 
-Route::get('/dashboard-user', [WebsiteController::class, 'dashboard_user'])->name('dashboard_user')->middleware('auth');
+Route::get('/dashboard', [WebsiteController::class, 'dashboard'])->name('dashboard')->middleware('auth');
 
 
 Route::get('/logout', [WebsiteController::class, 'logout'])->name('logout');
