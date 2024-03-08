@@ -1,15 +1,15 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebsiteController;
 
 Route::get('/', [WebsiteController::class, 'index'])->name('home');
 
-Route::get('/dashboard-admin', [WebsiteController::class, 'dashboard_admin'])->name('dashboard_admin')->middleware('admin');
+
 
 Route::get('/dashboard-user', [WebsiteController::class, 'dashboard_user'])->name('dashboard_user')->middleware('auth');
 
-Route::get('/settings', [WebsiteController::class, 'settings'])->name('settings')->middleware('admin');
 
 Route::get('/logout', [WebsiteController::class, 'logout'])->name('logout');
 
@@ -28,3 +28,14 @@ Route::post('/forget_password_submit', [WebsiteController::class, 'forget_passwo
 Route::get('/reset_password/{token}/{user}', [WebsiteController::class, 'reset_password'])->name('reset_password');
 
 Route::post('/reset_password_submit', [WebsiteController::class, 'reset_password_submit'])->name('reset_password_submit');
+
+
+
+// Admin 
+
+
+Route::get('/admin/login', [AdminController::class, 'login'])->name('admin_login');
+
+Route::get('/admin/dashboard', [WebsiteController::class, 'dashboard'])->name('admin_dashboard')->middleware('admin');
+
+Route::get('/admin/settings', [WebsiteController::class, 'settings'])->name('admin_settings')->middleware('admin');
