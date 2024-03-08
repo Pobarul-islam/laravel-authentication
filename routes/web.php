@@ -36,6 +36,10 @@ Route::post('/reset_password_submit', [WebsiteController::class, 'reset_password
 
 Route::get('/admin/login', [AdminController::class, 'login'])->name('admin_login');
 
-Route::get('/admin/dashboard', [WebsiteController::class, 'dashboard'])->name('admin_dashboard')->middleware('admin');
+Route::post('/admin/login_submit', [AdminController::class, 'login_submit'])->name('admin_login_submit');
 
-Route::get('/admin/settings', [WebsiteController::class, 'settings'])->name('admin_settings')->middleware('admin');
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin_dashboard')->middleware('admin:admin');
+
+Route::get('/admin/settings', [AdminController::class, 'settings'])->name('admin_settings')->middleware('admin:admin');
+
+Route::get('/admin/logout', [AdminController::class, 'logout'])->name('admin_logout');

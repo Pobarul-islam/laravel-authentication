@@ -1,6 +1,6 @@
-@include('admin.nav')
 
-<h3>Login</h3>
+
+<h3>Admin Login</h3>
 
 
 <form action="{{ route('admin_login_submit') }}" method="post">
